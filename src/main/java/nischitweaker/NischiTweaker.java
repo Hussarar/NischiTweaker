@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
         version = Tags.VERSION,
         name = Tags.NAME,
         dependencies =
-                "required-after:fermiumbooter@[1.3.2,);" +
+                "required-after:fermiumbooter@[1.5.3,);" +
                 "required:betterconfig@[1.2.0,)",
         acceptableRemoteVersions = "*"
 )
