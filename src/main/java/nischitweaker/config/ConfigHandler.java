@@ -32,9 +32,6 @@ public class ConfigHandler {
 	@Config.Name("Mod Containers")
 	public static ModContainerConfig modContainers = new ModContainerConfig();
 
-	@Config.Name("Vanilla")
-	public static VanillaConfig vanilla = new VanillaConfig();
-
 	@Config.Name("ZenUtils")
 	public static ZenUtilsConfig zenUtils = new ZenUtilsConfig();
 

@@ -1,4 +1,4 @@
-package nischitweaker.mixins.vanilla;
+package nischitweaker.mixins.enchantertools;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -6,13 +6,10 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.sirsquidly.enchanter_tools.init.EnchanterToolsItems;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import nischitweaker.config.ConfigHandler;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.util.Random;
 
@@ -30,7 +27,7 @@ public class ListEnchantedBookForEmeraldsMixin {
             @Local LocalIntRef originalLvl
     ) {
         // Check configured chance
-        if (random.nextFloat() >= ConfigHandler.vanilla.inkwellReplaceChance) return original;
+        if (random.nextFloat() >= ConfigHandler.enchanterTools.inkwellReplaceChance) return original;
 
         ItemStack inkwellStack = new ItemStack(EnchanterToolsItems.ENCHANTED_INKWELL);
         // Add the rolled enchantment at max level
