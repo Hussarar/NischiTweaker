@@ -8,12 +8,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import nischitweaker.Tags;
-import nischitweaker.config.folders.ChampionsConfig;
-import nischitweaker.config.folders.DistantHorizonsConfig;
-import nischitweaker.config.folders.InControlConfig;
-import nischitweaker.config.folders.ModContainerConfig;
-import nischitweaker.config.folders.VanillaConfig;
-import nischitweaker.config.folders.ZenUtilsConfig;
+import nischitweaker.config.folders.*;
 
 @BetterConfig(
 		modid = Tags.MODID,
@@ -42,6 +37,9 @@ public class ConfigHandler {
 
 	@Config.Name("ZenUtils")
 	public static ZenUtilsConfig zenUtils = new ZenUtilsConfig();
+
+	@Config.Name("Enchanter Tools")
+	public static EnchanterToolsConfig enchanterTools = new EnchanterToolsConfig();
 
 	@Mod.EventBusSubscriber
 	private static class EventHandler{
