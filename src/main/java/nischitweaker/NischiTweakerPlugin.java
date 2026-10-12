@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.CoreModManager;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import nischitweaker.asm.ConfigAnytimeClassTransformer;
 import nischitweaker.asm.distanthorizons.DistantHorizonsMixinConnectorTransformer;
+import nischitweaker.asm.enchantertools.EnchanterToolsClassTransformer;
 import nischitweaker.asm.zenutils.ZenUtilsShareTransformer;
 import nischitweaker.config.ConfigHandler;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +32,9 @@ public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass()
 	{
-		return new String[0];
+		return new String[]{
+				EnchanterToolsClassTransformer.class.getName()
+		};
 	}
 	
 	@Override
