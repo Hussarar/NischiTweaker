@@ -21,11 +21,25 @@ public class EnchanterToolsConfig {
     @Order(1)
     public double inkwellReplaceChance = 0.01;
 
-    @Config.Comment("Makes Comprehension scale xp gains by +50% per lvl instead of scaling as x1.5, x3, x4.5 etc.")
-    @Config.Name("Modify Comprehension Scaling (MixinToggle")
+    @Config.Comment("Makes Comprehension scale xp gains by +x% per lvl instead of scaling as x1.5, x3, x4.5 etc. Also allows to set a chance to get it.")
+    @Config.Name("Modify Comprehension (MixinToggle)")
     @Config.RequiresMcRestart
     @MixinConfig.MixinToggle(lateMixin = "mixins.nischitweaker.enchantertools.comprehension.json", defaultValue = true)
-    @MixinConfig.CompatHandling(modid = "enchanter_tools", targetVersionRange = "(,1.1.1a]", desired = true, warnIngame = false, reason = "Compat for Enchanter Tools")
+    @MixinConfig.CompatHandling(modid = "enchanter_tools", desired = true, warnIngame = false, reason = "Compat for Enchanter Tools")
     @Order(2)
     public boolean modifyComprehensionScaling = true;
+
+    @Config.Comment("By how much to increase experience gains when comprehension is active. Requires \"Modify Comprehension\"")
+    @Config.Name("Comprehension XP Scale")
+    @Order(3)
+    @Config.RangeDouble(min = 0)
+    @Config.SlidingOption
+    public float comprehensionScale = 0.35F;
+
+    @Config.Comment("Chance to get Comprehension when using an XP Bottle. Requires \"Modify Comprehension\"")
+    @Config.Name("Chance for Comprehension")
+    @Order(4)
+    @Config.RangeDouble(min = 0, max = 1)
+    @Config.SlidingOption
+    public float comprehensionChance = 0.15F;
 }
