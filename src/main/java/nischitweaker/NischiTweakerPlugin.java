@@ -1,6 +1,5 @@
 package nischitweaker;
 
-import fermiumbooter.FermiumRegistryAPI;
 import fermiumbooter.util.FermiumJarScanner;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.relauncher.CoreModManager;
@@ -19,19 +18,31 @@ import java.util.Map;
 public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 
 	public NischiTweakerPlugin() {
-		if(FermiumJarScanner.isModPresent("zenutils")) { //TODO: idk why fermiumbooter doesnt have a public access to mixintoggles but technically this should both only apply for zenutils < 1.28.7. will do that in next fb release
+		if(CompatUtil.isInRange("zenutils", "(1.26.0,1.27.5]")) {
 			Launch.classLoader.registerTransformer(ConfigAnytimeClassTransformer.class.getName());
 			Launch.classLoader.registerTransformer(ZenUtilsShareTransformer.class.getName());
 		}
 		if(FermiumJarScanner.isModPresent("distanthorizons"))
 			Launch.classLoader.registerTransformer(DistantHorizonsMixinConnectorTransformer.class.getName());
 
-		FermiumRegistryAPI.enqueueMixin(false, "mixins.nischitweaker.dependencies.json", () -> !ConfigHandler.modContainers.removedDependencies.isEmpty());
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.dependencies.json", false, ConfigHandler.modContainers.removedDependencies.values());
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.enchantertools.inkwell.early.json", false, ConfigHandler.enchanterTools.inkwellReplaceChance, "enchanter_tools");
+
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.enchantertools.comprehension.json", true, ConfigHandler.enchanterTools.comprehensionChance, "enchanter_tools");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.bloodmoon.disablebeforephase.json", true, ConfigHandler.bloodmoon.bloodmoonMinPhase, "bloodmoon", "srparasites", "srpmixins");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.champions.dmgscaling.json", true, ConfigHandler.champions.flatDamageAmount, "champions");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.champions.parasitechance.json", true, ConfigHandler.champions.championParasiteChanceIncrease, "champions", "srparasites", "srpmixins");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.ebwizardry.unbreakableblocks.json", true, ConfigHandler.ebwizardry.wizardryUnbreakableBlocks, "ebwizardry");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.familiarfauna.pixiespawnheight.json", true, ConfigHandler.familiarfauna.pixieMaxSpawnHeight, "familiarfauna");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.infernalmobs.parasitechance.json", true, ConfigHandler.infernalmobs.infernalParasiteChanceIncrease, "infernalmobs", "srparasites", "srpmixins");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.locks.lockpickingpitch.json", true, () -> Math.abs(ConfigHandler.locks.lockPickingPitchMultiplier - 1.25F) > 1e-3, "locks");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.netherapi.biomesize.json", true, () -> ConfigHandler.netherapi.netherBiomeSize != 3, "nether_api");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.reskillable.goldenosmosis.json", true, ConfigHandler.reskillable.goldenOsmosisRepairableItems, "reskillable");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.variedcommodities.musketloadtime.json", true, () -> ConfigHandler.variedcommodities.musketLoadingTime != 60, "variedcommodities");
 	}
 
 	@Override
-	public String[] getASMTransformerClass()
-	{
+	public String[] getASMTransformerClass() {
 		return new String[]{
 				EnchanterToolsClassTransformer.class.getName()
 		};

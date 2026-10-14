@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Rank.class)
-public class RankMixin {
+public abstract class RankMixin {
 
     /**
      * Modifies the damage scaling behavior for high-damage champions.

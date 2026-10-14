@@ -1,31 +1,25 @@
 package nischitweaker.config.folders;
 
-import fermiumbooter.annotations.MixinConfig;
-import meldexun.betterconfig.api.Order;
 import net.minecraftforge.common.config.Config;
-import nischitweaker.Tags;
 
-@MixinConfig(name = Tags.MODID)
+//@MixinConfig(name = Tags.MODID)
 public class ChampionsConfig {
-
-    @Config.Comment({
-            "Will cap out added dmg for champions to a modifiable amount.",
-            "When base dmg above threshold, will add flat damage instead of multiplying."
-    })
-    @Config.Name("Cap Increased Damage (MixinToggle)")
-    @MixinConfig.MixinToggle(lateMixin = "mixins.nischitweaker.champions.json", defaultValue = true)
-    @MixinConfig.CompatHandling(modid = "champions", desired = true, warnIngame = false, reason = "Champions compat requires Champions")
-    @Order(0)
-    public boolean enableChampionsDamageScalingMixin = true;
-
     @Config.Comment({
             "Champions will not be able to get more added damage than this value times the growthFactor of their rank.",
             "Example: A 5 star with growthFactor of 15 wont get more than +750 dmg.",
             "The breakpoint is reached at this value divided by champions attackDamage cfg,",
-            " so by default 50/0.5 = 100 base dmg"
+            " so by default 50/0.5 = 100 base dmg",
+            "Disable mixin by setting to 0 (requires restart)"
     })
-    @Config.Name("Damage Cap per growthFactor")
+    @Config.Name("Damage Cap per growthFactor (Mixin Toggle)")
     @Config.RangeDouble(min = 0.0)
-    @Order(1)
-    public double flatDamageAmount = 50;
+    public float flatDamageAmount = 50;
+
+    @Config.Comment({
+            "Champion spawn chance increase for parasites in phase 9+ (0.5 = 50% increase)",
+            "Set to 0 to disable mixin (requires restart)"
+    })
+    @Config.Name("Champion Parasite Chance Increase (Mixin Toggle)")
+    @Config.RangeDouble(min = 0.0)
+    public float championParasiteChanceIncrease = 0.5F;
 }

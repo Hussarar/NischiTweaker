@@ -16,7 +16,7 @@ public class ConfigAnytimeClassTransformer extends HashMapClassNodeClassTransfor
     protected void registerTransformers(IClassTransformerRegistry registry) {
         // Replace ConfigAnytime.register(class) by zenutils internal
         // ConfigAnytimeAnytime.register(class, null)
-        for (String className : ConfigHandler.modContainers.configAnytimeClassPatches) {
+        for (String className : ConfigHandler.zenUtils.configAnytimeClassPatches) {
             registry.add(className, "<clinit>", ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS, method -> {
                 MethodInsnNode register = ASMUtil.first(method).methodInsn("register").find();
                 if (register != null) {

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.Random;
 
 @Mixin(EntityVillager.ListEnchantedBookForEmeralds.class)
-public class ListEnchantedBookForEmeraldsMixin {
+public abstract class ListEnchantedBookForEmeraldsMixin {
 
     @ModifyExpressionValue(
             method = "addMerchantRecipe",

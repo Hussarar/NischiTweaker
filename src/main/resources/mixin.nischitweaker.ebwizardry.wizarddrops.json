@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "nischitweaker.mixins",
+  "refmap": "mixins.nischitweaker.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "mixins": [
+    "ebwizardry.EntityEvilWizardMixin_Drops",
+    "ebwizardry.EntityWizardMixin_Drops"
+  ]
+}

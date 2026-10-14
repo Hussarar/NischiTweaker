@@ -6,10 +6,13 @@ import nischitweaker.Tags;
 
 @MixinConfig(name = Tags.MODID)
 public class InControlConfig {
-    @Config.Comment("If your installed profile is in a path containing \"curseforge\", all mobs would be matched to forge -> minecraft modid by incontrols modid check. This fixes it.")
-    @Config.Name("Fix mod rules")
+    @Config.Comment({
+            "Fixes rules using \"mod\".",
+            "If your installed profile is in a path containing \"curseforge\", all mobs would be matched to forge -> minecraft modid by incontrols modid check."
+    })
+    @Config.Name("Fix mod rules (MixinToggle)")
     @Config.RequiresMcRestart
-    @MixinConfig.MixinToggle(lateMixin = "mixins.nischitweaker.incontrol.json", defaultValue = true)
-    @MixinConfig.CompatHandling(modid = "incontrol", desired = true, warnIngame = false, reason = "Fix for InControl")
+    @MixinConfig.MixinToggle(lateMixin = "mixin.nischitweaker.incontrol.modrules.json", defaultValue = true)
+    @MixinConfig.CompatHandling(modid = "incontrol", modName = "InControl", desired = true, warnIngame = false, reason = "Fix for InControl")
     public boolean fixGettingModid = true;
 }

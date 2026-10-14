@@ -9,11 +9,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(CommonEvents.class)
-public abstract class CommonEventsMixin {
+public abstract class CommonEventsMixin_ComprehensionChance {
     @WrapOperation(
             method = "onProjectileImpact",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLivingBase;canBeHitWithPotion()Z"),
-            remap = false
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLivingBase;canBeHitWithPotion()Z")
     )
     private static boolean nischitweaker_comprehensionChance(EntityLivingBase instance, Operation<Boolean> original) {
         return original.call(instance) && instance.getRNG().nextFloat() < ConfigHandler.enchanterTools.comprehensionChance;

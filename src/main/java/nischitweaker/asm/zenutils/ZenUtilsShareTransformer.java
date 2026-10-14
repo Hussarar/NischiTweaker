@@ -7,7 +7,6 @@ import net.minecraft.launchwrapper.IClassTransformer;
 import nischitweaker.config.ConfigHandler;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
 public class ZenUtilsShareTransformer extends HashMapClassNodeClassTransformer implements IClassTransformer {
