@@ -110,6 +110,7 @@ dependencies {
     implementation fg.deobf("curse.maven:charm-318872:3146596")
     compileOnly fg.deobf("curse.maven:oceanic-expanse-840576:7009970")
     implementation fg.deobf("curse.maven:jei-238222:5846804")
+    implementation fg.deobf("curse.maven:level-up-251136:2763516")
 }
 
 mixin {

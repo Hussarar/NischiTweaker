@@ -116,6 +116,9 @@ public class ConfigHandler {
 	@Config.Name("RLMixins")
 	public static RLMixinsConfig rlmixins = new RLMixinsConfig();
 
+	@Config.Name("Level Up! Reloaded")
+	public static LevelUp2Config levelup2 = new LevelUp2Config();
+
 	@Mod.EventBusSubscriber
 	private static class EventHandler{
 		@SubscribeEvent
