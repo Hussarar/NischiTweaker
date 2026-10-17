@@ -12,7 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class StealthLibMixin {
     @WrapOperation(
             method = "entityHasVisionOf",
-            at = @At(value = "INVOKE", target = "Llevelup2/skills/combat/StealthLib;entityIsFacing(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/entity/EntityLivingBase;)Z")
+            at = @At(value = "INVOKE", target = "Llevelup2/skills/combat/StealthLib;entityIsFacing(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/entity/EntityLivingBase;)Z"),
+            remap = false
     )
     private static boolean nischiTweaker_fixArgumentOrder(EntityLivingBase player, EntityLivingBase living, Operation<Boolean> original) {
         return original.call(living, player);
