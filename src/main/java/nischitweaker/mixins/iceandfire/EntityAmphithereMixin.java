@@ -8,12 +8,10 @@ import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+// By fresh-Glitch
 @Mixin(EntityAmphithere.class)
 public abstract class EntityAmphithereMixin {
 
-    /**
-     * Post AnimalTameEvent when amphithere is tamed
-     */
     @WrapOperation(
             method = "onLivingUpdate",
             at = @At(value = "INVOKE", target = "Lcom/github/alexthe666/iceandfire/entity/EntityAmphithere;setTamedBy(Lnet/minecraft/entity/player/EntityPlayer;)V")

@@ -8,12 +8,10 @@ import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+// By fresh-Glitch
 @Mixin(EntityCockatrice.class)
 public abstract class EntityCockatriceMixin {
 
-    /**
-     * Post AnimalTameEvent when cockatrice is tamed
-     */
     @WrapOperation(
             method = "onLivingUpdate",
             at = @At(value = "INVOKE", target = "Lcom/github/alexthe666/iceandfire/entity/EntityCockatrice;setTamedBy(Lnet/minecraft/entity/player/EntityPlayer;)V")

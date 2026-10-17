@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.LinkedHashSet;
 
 @Mixin(TooltipRenderer.class)
-public abstract class TooltipRendererConcurrencyFixMixin {
+public abstract class TooltipRendererMixin_ConcurrencyFix {
     @ModifyExpressionValue(
             method = "tooltips",
             at = @At(value = "FIELD", target = "Lcom/fantasticsource/setbonus/SetBonusData;sets:Ljava/util/LinkedHashSet;"),

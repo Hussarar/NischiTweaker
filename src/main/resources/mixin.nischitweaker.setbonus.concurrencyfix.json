@@ -6,6 +6,6 @@
   "target": "@env(CLIENT)",
   "minVersion": "0.8",
   "client": [
-    "setbonus.TooltipRendererConcurrencyFixMixin"
+    "setbonus.TooltipRendererMixin_ConcurrencyFix"
   ]
 }

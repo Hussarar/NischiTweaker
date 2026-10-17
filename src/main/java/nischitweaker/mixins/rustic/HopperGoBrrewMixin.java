@@ -18,7 +18,7 @@ import rustic.common.inventory.ExternalItemHandler;
 import rustic.common.tileentity.TileEntityBrewingBarrel;
 
 @Mixin(TileEntityBrewingBarrel.class)
-public abstract class TileEntityBrewingBarrelMixin extends TileEntity {
+public abstract class HopperGoBrrewMixin extends TileEntity {
     @Shadow(remap = false) private ExternalItemHandler externalStackHandler;
 
     @Unique private IItemHandler nischitweaker$handlerJuiceIn;

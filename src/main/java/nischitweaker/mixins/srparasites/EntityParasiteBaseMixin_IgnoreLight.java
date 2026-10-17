@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(EntityParasiteBase.class)
-public abstract class EntityParasiteBaseMixin extends Entity {
-    public EntityParasiteBaseMixin(World worldIn) {
+public abstract class EntityParasiteBaseMixin_IgnoreLight extends Entity {
+    public EntityParasiteBaseMixin_IgnoreLight(World worldIn) {
         super(worldIn);
     }
 
