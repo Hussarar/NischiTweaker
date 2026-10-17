@@ -65,7 +65,15 @@ public abstract class ItemXPTomeMixin extends Item {
     }
 
     @ModifyConstant(
-            method = {"onItemRightClick", "addInformation", "addXP", "setStoredXP", "getXPStored"},
+            method = {"onItemRightClick", "addInformation"},
+            constant = @Constant(intValue = 1395)
+    )
+    private int nischitweaker_modifyMaxStorage_remap(int original) {
+        return nischitweaker$getMaxStorage();
+    }
+
+    @ModifyConstant(
+            method = {"addXP", "setStoredXP", "getXPStored"},
             constant = @Constant(intValue = 1395),
             remap = false
     )

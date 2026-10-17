@@ -1,7 +1,10 @@
 package nischitweaker;
 
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import nischitweaker.features.GreaterXPTome;
 
 @Mod(
         modid = Tags.MODID,
@@ -13,10 +16,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
         acceptableRemoteVersions = "*"
 )
 public class NischiTweaker {
-    public static boolean completedLoading = false;
-
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        completedLoading = true;
+    public void preInit(FMLPreInitializationEvent event) {
+        if(Loader.isModLoaded("xpbook")) MinecraftForge.EVENT_BUS.register(GreaterXPTome.class);
     }
 }
