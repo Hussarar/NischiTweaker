@@ -1,0 +1,17 @@
+{
+	"type": "forge:ore_shaped",
+	"group": "locks:dragonbone_lock_pick",
+	"result": {
+		"item": "locks:dragonbone_lock_pick",
+		"count": 4
+	},
+	"pattern": [
+		" DD",
+		" D ",
+		"W  "
+	],
+	"key": {
+		"D": {"item": "iceandfire:dragonbone"},
+		"W": {"item": "iceandfire:witherbone"}
+	}
+}

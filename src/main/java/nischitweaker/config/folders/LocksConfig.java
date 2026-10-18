@@ -1,8 +1,13 @@
 package nischitweaker.config.folders;
 
+import com.google.common.collect.ImmutableMap;
 import fermiumbooter.annotations.MixinConfig;
 import net.minecraftforge.common.config.Config;
 import nischitweaker.Tags;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @MixinConfig(name = Tags.MODID)
 public class LocksConfig {
@@ -15,14 +20,16 @@ public class LocksConfig {
     @Config.RangeDouble(min = 0.0, max = 2.0)
     public float lockPickingPitchMultiplier = 0.5F;
 
-    @Config.Comment("Add dragonbone lock pick item")
-    @Config.Name("Dragonbone Lock Pick (MixinToggle)")
-    @MixinConfig.MixinToggle(lateMixin = "mixin.nischitweaker.locks.dragonbonelockpick.json", defaultValue = true)
-    @MixinConfig.CompatHandling(modid = "locks", desired = true, warnIngame = false, reason = "Compat for Locks")
-    public boolean dragonboneLockPick = true;
-
-    @Config.Comment("This is the chance to not break, as long as no enchantments are involved")
-    @Config.Name("Dragonbone Lock Pick Strength")
-    @Config.RangeDouble(min = 0.0, max = 1.0)
-    public float dragonboneLockPickDurability = 0.97F;
+    @Config.Comment({
+            "Add more lockpicks with strengths",
+            "Strength being the chance to not break, as long as no enchantments are involved",
+            "Disable mixin by clearing the list",
+            "By default adds a dragonbone lockpick with 97% survival chance.",
+            "For more picks you'll have to add a lang key, an item model json, a gui texture, an item texture and a recipe json."
+    })
+    @Config.Name("Additional Lock Picks(MixinToggle)")
+    @Config.RequiresMcRestart
+    public Map<String, Float> additionalLockpicks = new LinkedHashMap<>(ImmutableMap.of(
+            "dragonbone_lock_pick", 0.97F
+    ));
 }
