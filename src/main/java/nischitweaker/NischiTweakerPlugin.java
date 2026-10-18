@@ -39,6 +39,7 @@ public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.netherapi.biomesize.json", true, () -> ConfigHandler.netherapi.netherBiomeSize != 3, "nether_api");
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.reskillable.goldenosmosis.json", true, ConfigHandler.reskillable.goldenOsmosisRepairableItems, "reskillable");
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.variedcommodities.musketloadtime.json", true, () -> ConfigHandler.variedcommodities.musketLoadingTime != 60, "variedcommodities");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.xptome.greatertome.json", true, ConfigHandler.xptome.additionalTomes.keySet(), "xpbook");
 	}
 
 	@Override

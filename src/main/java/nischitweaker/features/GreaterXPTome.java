@@ -2,6 +2,7 @@ package nischitweaker.features;
 
 import bl4ckscor3.mod.xptome.ItemXPTome;
 import bl4ckscor3.mod.xptome.XPTome;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,15 +19,23 @@ import nischitweaker.Tags;
 import nischitweaker.config.ConfigHandler;
 import nischitweaker.recipes.RecipeGreaterXPTomeUpgrade;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GreaterXPTome {
     public static final String STORED_KEY = "StoredXP";
-    public static final String NAME = "greater_xp_book";
-    public static ShapedOreRecipe recipe;
+    public static final Map<String, ItemXPTome> XPTomes = new HashMap<>();
 
-    public static final ItemXPTome GREATER_XP_TOME = (ItemXPTome) new ItemXPTome()
-            .setRegistryName(new ResourceLocation(XPTome.MODID, NAME))
-            .setTranslationKey(XPTome.MODID + ":"+ NAME)
-            .setMaxDamage(ConfigHandler.xptome.maxStorage);
+    public static void registerAdditionalTomes(RegistryEvent.Register<Item> event) {
+        ConfigHandler.xptome.additionalTomes.forEach((name, maxStorage) -> {
+            ItemXPTome tome = (ItemXPTome) new ItemXPTome()
+                    .setRegistryName(new ResourceLocation(XPTome.MODID, name))
+                    .setTranslationKey(XPTome.MODID + ":"+ name)
+                    .setMaxDamage(maxStorage);
+            XPTomes.put(name, tome);
+            event.getRegistry().register(tome);
+        });
+    }
 
     public static int getStoredXP(ItemStack stack) {
         if (!(stack.getItem() instanceof ItemXPTome)) return 0;
@@ -50,16 +59,17 @@ public class GreaterXPTome {
 
     @SubscribeEvent
     public static void onRecipe(RegistryEvent.Register<IRecipe> event) {
-        IRecipe original = event.getRegistry().getValue(new ResourceLocation(Tags.MODID, NAME));
-        if(!(original instanceof ShapedOreRecipe)) {
-            Tags.LOGGER.warn("Greater XP Tome Recipe json not found");
-            return;
-        }
-        CraftingHelper.ShapedPrimer primer = new CraftingHelper.ShapedPrimer();
-        primer.width = ((ShapedOreRecipe) original).getRecipeWidth();
-        primer.height = ((ShapedOreRecipe) original).getRecipeHeight();
-        primer.input = original.getIngredients();
-        recipe = new RecipeGreaterXPTomeUpgrade(original, primer);
-        event.getRegistry().register(recipe); // this overrides the json defined recipe, only works bc thats allowed to recipes
+        ConfigHandler.xptome.additionalTomes.keySet().forEach(name -> {
+            IRecipe original = event.getRegistry().getValue(new ResourceLocation(Tags.MODID, name));
+            if(!(original instanceof ShapedOreRecipe)) {
+                Tags.LOGGER.warn("Additional XP Tome Recipe json not found for xpbook:{}", name);
+                return;
+            }
+            CraftingHelper.ShapedPrimer primer = new CraftingHelper.ShapedPrimer();
+            primer.width = ((ShapedOreRecipe) original).getRecipeWidth();
+            primer.height = ((ShapedOreRecipe) original).getRecipeHeight();
+            primer.input = original.getIngredients();
+            event.getRegistry().register(new RecipeGreaterXPTomeUpgrade(original, primer)); // this overrides the json defined recipe, only works bc thats allowed to recipes
+        });
     }
 }

@@ -1,21 +1,23 @@
 package nischitweaker.config.folders;
 
-import fermiumbooter.annotations.MixinConfig;
+import com.google.common.collect.ImmutableMap;
 import net.minecraftforge.common.config.Config;
-import nischitweaker.Tags;
 
-@MixinConfig(name = Tags.MODID)
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+//@MixinConfig(name = Tags.MODID)
 public class XPTomeConfig {
 
-    @Config.Comment("Adds a Greater XP Tome that can store up to 100 levels (30970 XP) instead of the normal tome's 30 levels (1395 XP).")
-    @Config.Name("Greater XP Tome (MixinToggle)")
+    @Config.Comment({
+            "Adds more XP Tomes with the given names and xp storage abilities.",
+            "To add more, you will need to provide a lang key, a texture, an item model json and a recipe json.",
+            "Default: greater_xp_book with 30970 = 100 lvl storage",
+            "Clear map to disable mixin."
+    })
+    @Config.Name("Additional XP Tomes (MixinToggle)")
     @Config.RequiresMcRestart
-    @MixinConfig.MixinToggle(lateMixin = "mixin.nischitweaker.xptome.greatertome.json", defaultValue = true)
-    @MixinConfig.CompatHandling(modid = "xpbook", desired = true, warnIngame = false, reason = "Greater XP Tome requires XP Tome")
-    public boolean greaterTome = true;
-
-    @Config.Comment("How much XP the Greater XP Tome should hold. Default 30970 = 100 lvls.")
-    @Config.Name("Greater XP Tome Size")
-    @Config.RangeInt(min = 0)
-    public int maxStorage = 30970;
+    public Map<String, Integer> additionalTomes = new LinkedHashMap<>(ImmutableMap.of(
+            "greater_xp_book", 30970
+    ));
 }

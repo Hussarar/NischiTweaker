@@ -16,7 +16,7 @@ public abstract class XPTomeMixin {
 
     @Inject(method = "onRegisterItems", at = @At("TAIL"), remap = false)
     private static void nischitweaker_addGreaterTome(RegistryEvent.Register<Item> event, CallbackInfo ci) {
-        event.getRegistry().register(GreaterXPTome.GREATER_XP_TOME);
+        GreaterXPTome.registerAdditionalTomes(event);
     }
 
     @Inject(method = "onAnvilUpdate", at = @At("TAIL"), remap = false)
