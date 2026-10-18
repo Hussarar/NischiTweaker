@@ -13,7 +13,8 @@ public class XPTomeConfig {
             "Adds more XP Tomes with the given names and xp storage abilities.",
             "To add more, you will need to provide a lang key, a texture, an item model json and a recipe json.",
             "Default: greater_xp_book with 30970 = 100 lvl storage",
-            "Clear map to disable mixin."
+            "Clear map to disable mixin.",
+            "Works for XP Tome v1.1.6"
     })
     @Config.Name("Additional XP Tomes (MixinToggle)")
     @Config.RequiresMcRestart
