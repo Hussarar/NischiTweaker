@@ -119,7 +119,10 @@ public class ConfigHandler {
 	@Config.Name("Level Up! Reloaded")
 	public static LevelUp2Config levelup2 = new LevelUp2Config();
 
-	@Mod.EventBusSubscriber
+	@Config.Name("Minecraft")
+	public static VanillaConfig vanilla = new VanillaConfig();
+
+    @Mod.EventBusSubscriber
 	private static class EventHandler{
 		@SubscribeEvent
 		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
