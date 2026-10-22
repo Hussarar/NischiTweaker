@@ -11,7 +11,8 @@
   ],
   "key": {
     "E": {
-      "item": "charm:ender_pearl_block"
+      "item": "charm:ender_pearl_block",
+      "data": 0
     },
     "T": {
       "item": "xpbook:xp_book",
