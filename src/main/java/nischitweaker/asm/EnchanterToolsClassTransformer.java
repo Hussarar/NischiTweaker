@@ -1,4 +1,4 @@
-package nischitweaker.asm.enchantertools;
+package nischitweaker.asm;
 
 import meldexun.asmutil2.HashMapClassNodeClassTransformer;
 import meldexun.asmutil2.IClassTransformerRegistry;
@@ -13,6 +13,7 @@ public class EnchanterToolsClassTransformer extends HashMapClassNodeClassTransfo
 
     @Override
     protected void registerTransformers(IClassTransformerRegistry registry) {
+        // Remove the @Inject enchantertools$preventNegativePower from MixinEnchantmentHelper so mixin doesn't apply it
         if(ConfigHandler.enchanterTools.fixMinEnchantLvl && CompatUtil.isInRange("enchanter_tools", "[1.1.1a]"))
             registry.add("com.sirsquidly.enchanter_tools.mixin.MixinEnchantmentHelper", ClassWriter.COMPUTE_FRAMES, classNode -> {
                 classNode.methods.removeIf(method ->

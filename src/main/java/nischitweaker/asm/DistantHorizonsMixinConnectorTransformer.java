@@ -1,4 +1,4 @@
-package nischitweaker.asm.distanthorizons;
+package nischitweaker.asm;
 
 import meldexun.asmutil2.ASMUtil;
 import meldexun.asmutil2.HashMapClassNodeClassTransformer;
@@ -13,16 +13,18 @@ public class DistantHorizonsMixinConnectorTransformer extends HashMapClassNodeCl
 
     @Override
     protected void registerTransformers(IClassTransformerRegistry registry) {
-        //Replace ModDiscoverer.isModPresent with true
         if(!ConfigHandler.distantHorizons.removeMixinBooterDependency) return;
+
+        // Replace both ModDiscoverer.isModPresent(modid) calls by
+        // Hook.returnTrue(modid)
         registry.add("com.seibel.distanthorizons.forge112.DistantHorizonsMixinConnector", "connect", ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS, method -> {
             MethodInsnNode isModPresent = ASMUtil.first(method).methodInsn("isModPresent").find();
             ASMUtil.replace(method, isModPresent,
-                    new MethodInsnNode(Opcodes.INVOKESTATIC, "nischitweaker/asm/distanthorizons/DistantHorizonsMixinConnectorTransformer$Hook", "returnTrue", "(Ljava/lang/String;)Z", false)
+                    new MethodInsnNode(Opcodes.INVOKESTATIC, "nischitweaker/asm/DistantHorizonsMixinConnectorTransformer$Hook", "returnTrue", "(Ljava/lang/String;)Z", false)
             );
             MethodInsnNode isModPresent2 = ASMUtil.nextExclusive(method, isModPresent).methodInsn("isModPresent").find();
             ASMUtil.replace(method, isModPresent2,
-                    new MethodInsnNode(Opcodes.INVOKESTATIC, "nischitweaker/asm/distanthorizons/DistantHorizonsMixinConnectorTransformer$Hook", "returnTrue", "(Ljava/lang/String;)Z", false)
+                    new MethodInsnNode(Opcodes.INVOKESTATIC, "nischitweaker/asm/DistantHorizonsMixinConnectorTransformer$Hook", "returnTrue", "(Ljava/lang/String;)Z", false)
             );
         });
     }

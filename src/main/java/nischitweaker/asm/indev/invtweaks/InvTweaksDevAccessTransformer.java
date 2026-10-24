@@ -1,4 +1,4 @@
-package nischitweaker.asm.invtweaks;
+package nischitweaker.asm.indev.invtweaks;
 
 import net.minecraftforge.fml.common.asm.transformers.AccessTransformer;
 

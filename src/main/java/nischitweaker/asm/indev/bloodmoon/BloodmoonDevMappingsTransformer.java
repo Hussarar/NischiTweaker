@@ -1,4 +1,4 @@
-package nischitweaker.asm.bloodmoon;
+package nischitweaker.asm.indev.bloodmoon;
 
 import meldexun.asmutil2.HashMapClassNodeClassTransformer;
 import meldexun.asmutil2.IClassTransformerRegistry;
@@ -22,13 +22,15 @@ public class BloodmoonDevMappingsTransformer extends HashMapClassNodeClassTransf
     @Override
     protected void registerTransformers(IClassTransformerRegistry registry) {
         //Bloodmoon reads SRG->MCP mappings from ForgeGradle 2's GradleStartCommon.CSV_DIR indev, read them from ForgeGradle 3's srg-mcp file instead
+        // Replace MCPNames.<clinit> (reading fields.csv and methods.csv) by
+        // fields = Hook.readMappings(false); methods = Hook.readMappings(true);
         registry.add("lumien.bloodmoon.asm.MCPNames", "<clinit>", ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS, method -> {
             InsnList insns = new InsnList();
             insns.add(new InsnNode(Opcodes.ICONST_0));
-            insns.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "nischitweaker/asm/bloodmoon/BloodmoonDevMappingsTransformer$Hook", "readMappings", "(Z)Ljava/util/Map;", false));
+            insns.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "nischitweaker/asm/indev/bloodmoon/BloodmoonDevMappingsTransformer$Hook", "readMappings", "(Z)Ljava/util/Map;", false));
             insns.add(new FieldInsnNode(Opcodes.PUTSTATIC, "lumien/bloodmoon/asm/MCPNames", "fields", "Ljava/util/Map;"));
             insns.add(new InsnNode(Opcodes.ICONST_1));
-            insns.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "nischitweaker/asm/bloodmoon/BloodmoonDevMappingsTransformer$Hook", "readMappings", "(Z)Ljava/util/Map;", false));
+            insns.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "nischitweaker/asm/indev/bloodmoon/BloodmoonDevMappingsTransformer$Hook", "readMappings", "(Z)Ljava/util/Map;", false));
             insns.add(new FieldInsnNode(Opcodes.PUTSTATIC, "lumien/bloodmoon/asm/MCPNames", "methods", "Ljava/util/Map;"));
             insns.add(new InsnNode(Opcodes.RETURN));
 
