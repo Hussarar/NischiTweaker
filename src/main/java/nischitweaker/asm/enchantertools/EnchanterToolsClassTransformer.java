@@ -14,11 +14,11 @@ public class EnchanterToolsClassTransformer extends HashMapClassNodeClassTransfo
     @Override
     protected void registerTransformers(IClassTransformerRegistry registry) {
         if(ConfigHandler.enchanterTools.fixMinEnchantLvl && CompatUtil.isInRange("enchanter_tools", "[1.1.1a]"))
-        registry.add("com.sirsquidly.enchanter_tools.mixin.MixinEnchantmentHelper", ClassWriter.COMPUTE_FRAMES, classNode -> {
-            classNode.methods.removeIf(method ->
-                    method.name.equals("enchantertools$preventNegativePower") &&
-                    Annotations.getVisible(method, Inject.class) != null // will be replaced by ModifyArg in next version probably
-            );
-        });
+            registry.add("com.sirsquidly.enchanter_tools.mixin.MixinEnchantmentHelper", ClassWriter.COMPUTE_FRAMES, classNode -> {
+                classNode.methods.removeIf(method ->
+                        method.name.equals("enchantertools$preventNegativePower") &&
+                        Annotations.getVisible(method, Inject.class) != null // will be replaced by ModifyArg in next version probably
+                );
+            });
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.relauncher.CoreModManager;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import nischitweaker.asm.ConfigAnytimeClassTransformer;
+import nischitweaker.asm.bloodmoon.BloodmoonDevMappingsTransformer;
 import nischitweaker.asm.distanthorizons.DistantHorizonsMixinConnectorTransformer;
 import nischitweaker.asm.enchantertools.EnchanterToolsClassTransformer;
 import nischitweaker.asm.invtweaks.InvTweaksDevAccessTransformer;
@@ -50,6 +51,8 @@ public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.locks.devgetitems.early.json", false, CompatUtil::isDev, "locks");
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.grapplinghook.devcaptureposition.json", true, CompatUtil::isDev, "grapplemod");
+		if(CompatUtil.isDev() && FermiumJarScanner.isModPresent("bloodmoon"))
+			Launch.classLoader.registerTransformer(BloodmoonDevMappingsTransformer.class.getName());
 	}
 
 	@Override
