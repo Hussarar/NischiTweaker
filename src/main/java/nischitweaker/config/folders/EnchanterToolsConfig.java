@@ -68,7 +68,7 @@ public class EnchanterToolsConfig {
     public boolean disableInkwellLoot = true;
 
     @Config.Comment("Fixes a bug in EnchanterTools 1.1.1a making enchanting with no bookshelves impossible for some items.")
-    @Config.Name("Fix Min Enchanting Lvl (Mixin & ASM Toggle")
+    @Config.Name("Fix Min Enchanting Lvl (Mixin & ASM Toggle)")
     @Config.RequiresMcRestart
     @MixinConfig.MixinToggle(earlyMixin = "mixin.nischitweaker.enchantertools.minenchlvl.json", defaultValue = true)
     @MixinConfig.CompatHandling(modid = "enchanter_tools", targetVersionRange = "1.1.1a", desired = true, warnIngame = false, reason = "Compat for Enchanter Tools")
