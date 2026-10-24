@@ -8,6 +8,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import nischitweaker.asm.ConfigAnytimeClassTransformer;
 import nischitweaker.asm.distanthorizons.DistantHorizonsMixinConnectorTransformer;
 import nischitweaker.asm.enchantertools.EnchanterToolsClassTransformer;
+import nischitweaker.asm.invtweaks.InvTweaksDevAccessTransformer;
 import nischitweaker.asm.zenutils.ZenUtilsShareTransformer;
 import nischitweaker.config.ConfigHandler;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +49,7 @@ public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.locks.dragonbonelockpick.json", true, ConfigHandler.locks.additionalLockpicks.keySet(), "locks");
 
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.locks.devgetitems.early.json", false, CompatUtil::isDev, "locks");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.grapplinghook.devcaptureposition.json", true, CompatUtil::isDev, "grapplemod");
 	}
 
 	@Override
@@ -80,6 +82,8 @@ public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 	@Override
 	public String getAccessTransformerClass()
 	{
+		if(CompatUtil.isDev() && FermiumJarScanner.isModPresent("inventorytweaks"))
+			return InvTweaksDevAccessTransformer.class.getName();
 		return null;
 	}
 }
