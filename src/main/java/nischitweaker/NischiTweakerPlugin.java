@@ -1,9 +1,7 @@
 package nischitweaker;
 
-import fermiumbooter.util.ClasspathModHandler;
 import fermiumbooter.util.FermiumJarScanner;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraftforge.fml.relauncher.CoreModManager;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import nischitweaker.asm.zenutils.ConfigAnytimeClassTransformer;
 import nischitweaker.asm.indev.bloodmoon.BloodmoonDevMappingsTransformer;
@@ -12,8 +10,6 @@ import nischitweaker.asm.EnchanterToolsClassTransformer;
 import nischitweaker.asm.indev.invtweaks.InvTweaksDevAccessTransformer;
 import nischitweaker.asm.zenutils.ZenUtilsShareTransformer;
 import nischitweaker.config.ConfigHandler;
-import org.apache.commons.lang3.StringUtils;
-import org.spongepowered.asm.mixin.MixinEnvironment;
 
 import java.util.Map;
 
@@ -22,7 +18,13 @@ public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 
 	public NischiTweakerPlugin() {
 		//FermiumBooter only does this in its injectData, scanning before that misses indev coremod dependencies (locks, enchanter_tools, rlmixins, ...)
-		ClasspathModHandler.fixIndevForceLoadAsModDependencies();
+		//Reflection since it only exists since FermiumBooter 1.6.0, not needed anymore since 1.6.4 (but harmless)
+		//No version check here, checking the version through the jar scanner would trigger the broken scan before the fix
+		if(CompatUtil.isDev()) {
+			try {
+				Class.forName("fermiumbooter.util.ClasspathModHandler").getMethod("fixIndevForceLoadAsModDependencies").invoke(null);
+			} catch(ReflectiveOperationException ignored) {}
+		}
 
 		if(CompatUtil.isInRange("zenutils", "(1.26.0,1.27.5]")) {
 			Launch.classLoader.registerTransformer(ConfigAnytimeClassTransformer.class.getName());
@@ -62,25 +64,9 @@ public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 		};
 	}
 	
-	@Override
-	public String getModContainerClass()
-	{
-		return null;
-	}
-	
-	@Override
-	public String getSetupClass()
-	{
-		return null;
-	}
-	
-	@Override
-	public void injectData(Map<String, Object> data) {
-		if (Boolean.FALSE.equals(data.get("runtimeDeobfuscationEnabled"))) {
-			MixinEnvironment.getDefaultEnvironment().setObfuscationContext("searge");
-			CoreModManager.getReparseableCoremods().removeIf(s -> StringUtils.containsIgnoreCase(s, "fermiumbooter"));
-		}
-	}
+	@Override public String getModContainerClass() {return null;}
+	@Override public String getSetupClass() {return null;}
+	@Override public void injectData(Map<String, Object> data) {}
 	
 	@Override
 	public String getAccessTransformerClass()
