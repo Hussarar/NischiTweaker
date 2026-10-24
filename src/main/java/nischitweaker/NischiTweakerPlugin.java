@@ -1,5 +1,6 @@
 package nischitweaker;
 
+import fermiumbooter.util.ClasspathModHandler;
 import fermiumbooter.util.FermiumJarScanner;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.relauncher.CoreModManager;
@@ -18,6 +19,9 @@ import java.util.Map;
 public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 
 	public NischiTweakerPlugin() {
+		//FermiumBooter only does this in its injectData, scanning before that misses indev coremod dependencies (locks, enchanter_tools, rlmixins, ...)
+		ClasspathModHandler.fixIndevForceLoadAsModDependencies();
+
 		if(CompatUtil.isInRange("zenutils", "(1.26.0,1.27.5]")) {
 			Launch.classLoader.registerTransformer(ConfigAnytimeClassTransformer.class.getName());
 			Launch.classLoader.registerTransformer(ZenUtilsShareTransformer.class.getName());
@@ -42,6 +46,8 @@ public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.variedcommodities.musketloadtime.json", true, () -> ConfigHandler.variedcommodities.musketLoadingTime != 60, "variedcommodities");
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.xptome.greatertome.json", true, ConfigHandler.xptome.additionalTomes.keySet(), "xpbook");
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.locks.dragonbonelockpick.json", true, ConfigHandler.locks.additionalLockpicks.keySet(), "locks");
+
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.locks.devgetitems.early.json", false, CompatUtil::isDev, "locks");
 	}
 
 	@Override

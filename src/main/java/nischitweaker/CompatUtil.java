@@ -3,6 +3,7 @@ package nischitweaker;
 import fermiumbooter.FermiumRegistryAPI;
 import fermiumbooter.util.FermiumJarScanner;
 import fermiumbooter.util.ModInfo;
+import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
@@ -41,6 +42,10 @@ public class CompatUtil {
         ModInfo modInfo = getModInfo(modId);
         if(modInfo == null || modInfo.modName == null) return false;
         return modInfo.modName.equals(name);
+    }
+
+    public static boolean isDev() {
+        return FMLLaunchHandler.isDeobfuscatedEnvironment();
     }
 
     public static void conditionallyAddMixin(String mixinJson, boolean late, int toggle, String... modids){
