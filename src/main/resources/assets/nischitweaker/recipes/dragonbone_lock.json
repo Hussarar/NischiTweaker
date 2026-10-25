@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "DBD",
+    "DDD"
+  ],
+  "key": {
+    "D": {
+      "item": "iceandfire:dragonbone"
+    },
+    "B": {
+      "item": "locks:steel_lock_mechanism"
+    },
+    "I": {
+      "item": "iceandfire:witherbone"
+    }
+  },
+  "result": {
+    "item": "locks:dragonbone_lock",
+    "count": 1
+  }
+}

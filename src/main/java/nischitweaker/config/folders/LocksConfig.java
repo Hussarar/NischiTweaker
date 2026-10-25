@@ -32,4 +32,32 @@ public class LocksConfig {
     public Map<String, Float> additionalLockpicks = new LinkedHashMap<>(ImmutableMap.of(
             "dragonbone_lock_pick", 0.97F
     ));
+    @Config.Comment({
+            "Add more locks with custom stats.",
+            "Format: name:length:enchantValue:resistance",
+            "Example: dragonbone_lock", "15:25:80.0" ,
+            "Disable mixin by clearing the list."
+    })
+    @Config.Name("Additional Locks(MixinToggle)")
+    @Config.RequiresMcRestart
+    public Map<String, String> additionalLocks = new LinkedHashMap<>(ImmutableMap.of(
+            "dragonbone_lock", "15:25:80.0" //15 Pins, 25 Enchant Value, 80.0 Resistance
+    ));
+
+    @Config.Comment({
+            "Change the strength of lock picks by name, e.g. diamond_lock_pick=0.1",
+            "Strength being the chance to not break, as long as no enchantments are involved",
+            "It also limits the lock complexity a pick can open: Complexity I needs more than 0.25, II more than 0.5, III more than 0.75",
+            "Picks from Additional Lock Picks can be listed too. Picks not listed keep their strength.",
+            "Disable mixin by clearing the list (requires restart)."
+    })
+    @Config.Name("Lock Pick Strengths(MixinToggle)")
+    @Config.RequiresMcRestart
+    public Map<String, Float> lockPickStrengths = new LinkedHashMap<>(ImmutableMap.of(
+            "wood_lock_pick", 0.2F,
+            "iron_lock_pick", 0.35F,
+            "steel_lock_pick", 0.7F,
+            "gold_lock_pick", 0.25F,
+            "diamond_lock_pick", 0.85F
+    ));
 }

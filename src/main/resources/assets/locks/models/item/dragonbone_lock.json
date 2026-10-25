@@ -1,0 +1,16 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "locks:item/dragonbone_lock"
+  },
+  "overrides":
+  [
+    {
+      "predicate":
+      {
+        "locks:open": 1
+      },
+      "model": "locks:item/open_dragonbone_lock"
+    }
+  ]
+}

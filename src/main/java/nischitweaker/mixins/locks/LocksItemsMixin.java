@@ -2,6 +2,7 @@ package nischitweaker.mixins.locks;
 
 import melonslise.locks.common.init.LocksItems;
 import net.minecraftforge.oredict.OreDictionary;
+import nischitweaker.features.DragonboneLock;
 import nischitweaker.features.DragonboneLockPick;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,6 +15,7 @@ public abstract class LocksItemsMixin {
     @Inject(method = "<clinit>", at = @At("TAIL"), remap = false)
     private static void nischitweaker_registerDragonboneLockpick(CallbackInfo ci) {
         DragonboneLockPick.registerLockPicks();
+        DragonboneLock.registerLocks();
     }
 
     @Inject(method = "register", at = @At("TAIL"), remap = false)
