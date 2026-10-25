@@ -1,4 +1,14 @@
 {
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "xpbook"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "charm"
+    }
+  ],
   "type": "forge:ore_shaped",
   "group": "nischitweaker:greater_xp_book",
   "result": {
