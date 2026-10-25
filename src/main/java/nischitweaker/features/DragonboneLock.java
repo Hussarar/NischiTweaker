@@ -12,14 +12,8 @@ public class DragonboneLock {
     public static final Map<String, LockItem> LOCKS = new HashMap<>();
 
     public static void registerLocks() {
-        ConfigHandler.locks.additionalLocks.forEach((name, stats) -> {
-            String[] parts = stats.split(":");
-            int length = Integer.parseInt(parts[0]);
-            int enchVal = Integer.parseInt(parts[1]);
-            float resist = Float.parseFloat(parts[2]);
-
-            //Create the Lock
-            LockItem item = new LockItem(length, enchVal, resist);
+        ConfigHandler.locks.additionalLocks.forEach((name, data) -> {
+            LockItem item = new LockItem(data.pins, data.enchantability, data.resistance);
             item.setCreativeTab(LocksCreativeTabs.TAB);
 
             LOCKS.put(name, item);
