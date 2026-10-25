@@ -41,7 +41,7 @@ public class LocksConfig {
     @Config.Name("Additional Locks(MixinToggle)")
     @Config.RequiresMcRestart
     public Map<String, String> additionalLocks = new LinkedHashMap<>(ImmutableMap.of(
-            "dragonbone_lock", "15:25:80.0" //15 Pins, 25 Enchant Value, 80.0 Resistance
+            "dragonbone_lock", "12:25:80.0" //15 Pins, 25 Enchant Value, 80.0 Resistance
     ));
 
     @Config.Comment({
