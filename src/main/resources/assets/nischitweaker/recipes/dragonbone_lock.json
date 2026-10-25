@@ -1,5 +1,6 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "forge:ore_shaped",
+  "group": "nischitweaker:dragonbone_lock",
   "pattern": [
     " I ",
     "DBD",
