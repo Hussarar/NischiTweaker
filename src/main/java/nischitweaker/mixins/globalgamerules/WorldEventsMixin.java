@@ -1,5 +1,6 @@
 package nischitweaker.mixins.globalgamerules;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import nischitweaker.config.ConfigHandler;
@@ -27,5 +28,23 @@ public abstract class WorldEventsMixin {
             if (ConfigHandler.globalgamerules.appliedGameRules.contains(rule))
                 action.accept(rule, value);
         });
+    }
+
+    @ModifyExpressionValue(
+            method = "onWorldLoad",
+            at = @At(value = "INVOKE", target = "Lse/gory_moon/globalgamerules/config/GGRConfig$Value;getIntegerValue()I"),
+            remap = false
+    )
+    private static int nischitweaker_onlyApplySpecificDifficulty(int original) {
+        return ConfigHandler.globalgamerules.appliedGameRules.contains("worldDifficulty") ? original : -1;
+    }
+
+    @ModifyExpressionValue(
+            method = "onWorldLoad",
+            at = @At(value = "INVOKE", target = "Lse/gory_moon/globalgamerules/config/GGRConfig$Value;getBooleanValue()Z"),
+            remap = false
+    )
+    private static boolean nischitweaker_onlyApplySpecificDifficultyLock(boolean original) {
+        return original && ConfigHandler.globalgamerules.appliedGameRules.contains("worldDifficultyLocked");
     }
 }

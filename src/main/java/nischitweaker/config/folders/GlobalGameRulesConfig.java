@@ -22,6 +22,7 @@ public class GlobalGameRulesConfig {
 
     @Config.Comment({
             "Only these gamerules will be applied from the Global GameRules config on world load, all others stay per world",
+            "Also affects GGR's custom configs worldDifficulty and worldDifficultyLocked options, so add them here if you want to use them. Suggested to use this mods version instead though (\"New World Difficulty\").",
             "Custom gamerules of Global GameRules are always applied",
             "Empty list to disable mixin (requires restart)"
     })

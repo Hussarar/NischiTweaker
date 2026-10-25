@@ -10,6 +10,7 @@ import nischitweaker.asm.EnchanterToolsClassTransformer;
 import nischitweaker.asm.indev.invtweaks.InvTweaksDevAccessTransformer;
 import nischitweaker.asm.zenutils.ZenUtilsShareTransformer;
 import nischitweaker.config.ConfigHandler;
+import nischitweaker.config.folders.VanillaConfig;
 
 import java.util.Map;
 
@@ -36,6 +37,7 @@ public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.dependencies.json", false, ConfigHandler.modContainers.removedDependencies.values());
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.enchantertools.inkwell.early.json", false, ConfigHandler.enchanterTools.inkwellReplaceChance, "enchanter_tools");
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.vanilla.frostwalkermulti.json", false, () -> ConfigHandler.vanilla.frostWalkerMulti != 1F);
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.vanilla.newworlddifficulty.json", false, () -> ConfigHandler.vanilla.newWorldDifficulty != VanillaConfig.Difficulty.NORMAL);
 
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.enchantertools.comprehension.json", true, ConfigHandler.enchanterTools.comprehensionChance, "enchanter_tools");
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.bloodmoon.disablebeforephase.json", true, ConfigHandler.bloodmoon.bloodmoonMinPhase, "bloodmoon", "srparasites", "srpmixins");
