@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,15 +35,20 @@ public class QTJeiPlugin implements IModPlugin {
     private static final Map<Class<?>, Class<?>> repairableDeclarers = new HashMap<>();
     private static List<ItemStack> allMaterialStacks = null;
 
+    private QTRecipeCategory category;
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
-        registry.addRecipeCategories(new QTRecipeCategory(registry.getJeiHelpers().getGuiHelper()));
+        category = new QTRecipeCategory(registry.getJeiHelpers().getGuiHelper());
+        registry.addRecipeCategories(category);
     }
 
     @Override
     public void register(IModRegistry registry) {
         //Adding the recipes
-        registry.addRecipes(getRecipes(registry.getJeiHelpers()), QTRecipeCategory.UID);
+        List<QTRecipeWrapper> recipes = getRecipes(registry.getJeiHelpers());
+        registry.addRecipes(recipes, QTRecipeCategory.UID);
+        category.setLabelsHeight(recipes.stream().mapToInt(r -> r.qualityLabels.getHeight()).max().orElse(0));
 
         //See Reforging Station recipes when right-clicking the Reforging Station block in JEI
         registry.addRecipeCatalyst(new ItemStack(BlockReforgingStation.INSTANCE), QTRecipeCategory.UID);
@@ -56,12 +62,15 @@ public class QTJeiPlugin implements IModPlugin {
         universalMaterial = null;
         loadCustomReforgingMaterialsEarly();
 
-        List<QTRecipeWrapper> recipeList = new ArrayList<>();
+        //Gear with the same quality type and the same materials gets grouped into one recipe
+        Map<String, QTRecipeWrapper> recipes = new LinkedHashMap<>();
         for (Item gearItem : ForgeRegistries.ITEMS) {
             ItemStack gearStack = new ItemStack(gearItem); //this approach does not allow metadata on the gear stacks, but that doesn't make sense anyway
 
             //Is able to get quality
-            if (gearStack.isEmpty() || !canGetQuality(gearStack)) continue;
+            if (gearStack.isEmpty()) continue;
+            QualityType qualityType = getQualityType(gearStack);
+            if (qualityType == null) continue;
             //Is not hidden in JEI, more expensive so checked after the quality check
             if (helpers.getIngredientBlacklist().isIngredientBlacklisted(gearStack)) continue;
 
@@ -71,9 +80,13 @@ public class QTJeiPlugin implements IModPlugin {
             if (customMaterials.containsKey(gearItem))
                 materials.addAll(customMaterials.get(gearItem));
 
-            if (!materials.isEmpty())
-                recipeList.add(new QTRecipeWrapper(gearStack, materials));
+            if (materials.isEmpty()) continue;
+            String groupKey = System.identityHashCode(qualityType) + ";" + getMaterialsKey(materials);
+            QTRecipeWrapper existingRecipe = recipes.get(groupKey);
+            if (existingRecipe != null) existingRecipe.gear.add(gearStack);
+            else recipes.put(groupKey, new QTRecipeWrapper(gearStack, materials, qualityType));
         }
+        List<QTRecipeWrapper> recipeList = new ArrayList<>(recipes.values());
 
         if (universalMaterial != null)
             recipeList.forEach(r -> r.addMaterial(universalMaterial));
@@ -88,13 +101,20 @@ public class QTJeiPlugin implements IModPlugin {
         return recipeList;
     }
 
-    //Same as QualityToolsHelper.generateQualityTag without actually rolling a quality and writing it to the stack
-    private static boolean canGetQuality(ItemStack stack) {
-        if (stack.getItem().getItemStackLimit(stack) != 1 && !ConfigLoader.allowStackableItems) return false;
+    private static String getMaterialsKey(List<ItemStack> materials) {
+        StringBuilder key = new StringBuilder();
+        for (ItemStack material : materials)
+            key.append(material.getItem().getRegistryName()).append('@').append(material.getMetadata()).append(material.getTagCompound()).append(',');
+        return key.toString();
+    }
+
+    //Same as QualityToolsHelper.generateQualityTag without actually rolling a quality and writing it to the stack. The first matching quality type is the one that gets used
+    private static QualityType getQualityType(ItemStack stack) {
+        if (stack.getItem().getItemStackLimit(stack) != 1 && !ConfigLoader.allowStackableItems) return null;
         for (QualityType qualityType : ConfigLoader.qualityTypes.values())
             if (qualityType != null && qualityType.itemMatches(stack))
-                return true;
-        return false;
+                return qualityType;
+        return null;
     }
 
     //Mirrors the getIsRepairable part of QualityToolsHelper.canReforgeWith

@@ -114,6 +114,7 @@ dependencies {
     implementation fg.deobf("curse.maven:jei-238222:5846804")
     implementation fg.deobf("curse.maven:qualitytools-264756:2732994")
     implementation fg.deobf("curse.maven:materialtweaker-679116:4178657")
+    implementation fg.deobf("curse.maven:luckified-1105213:7064854")
     implementation fg.deobf("curse.maven:spartanweaponry-278141:6839689")
     implementation fg.deobf("curse.maven:spartanfire-676392:6774250")
     implementation fg.deobf("curse.maven:level-up-251136:2763516")
