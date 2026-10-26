@@ -112,7 +112,13 @@ dependencies {
     implementation fg.deobf("curse.maven:charm-318872:3146596")
     implementation fg.deobf("curse.maven:oceanic-expanse-840576:7009970")
     implementation fg.deobf("curse.maven:jei-238222:5846804")
+    implementation fg.deobf("curse.maven:qualitytools-264756:2732994")
+    implementation fg.deobf("curse.maven:materialtweaker-679116:4178657")
+    implementation fg.deobf("curse.maven:spartanweaponry-278141:6839689")
+    implementation fg.deobf("curse.maven:spartanfire-676392:6774250")
     implementation fg.deobf("curse.maven:level-up-251136:2763516")
+    implementation fg.deobf("curse.maven:global-gamerules-227657:2654852")
+    implementation fg.deobf("curse.maven:potioncore-242872:2905184")
 }
 
 mixin {

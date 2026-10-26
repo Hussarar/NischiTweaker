@@ -119,6 +119,12 @@ public class ConfigHandler {
 	@Config.Name("Level Up! Reloaded")
 	public static LevelUp2Config levelup2 = new LevelUp2Config();
 
+	@Config.Name("Global GameRules")
+	public static GlobalGameRulesConfig globalgamerules = new GlobalGameRulesConfig();
+
+	@Config.Name("Quality Tools")
+	public static QualityToolsConfig qualitytools = new QualityToolsConfig();
+
 	@Config.Name("Minecraft")
 	public static VanillaConfig vanilla = new VanillaConfig();
 
