@@ -48,7 +48,7 @@ public class QTJeiPlugin implements IModPlugin {
         //Adding the recipes
         List<QTRecipeWrapper> recipes = getRecipes(registry.getJeiHelpers());
         registry.addRecipes(recipes, QTRecipeCategory.UID);
-        category.setLabelsHeight(recipes.stream().mapToInt(r -> r.qualityLabels.getHeight()).max().orElse(0));
+        category.setLabelsHeight(recipes.stream().filter(r -> r.qualityLabels != null).mapToInt(r -> r.qualityLabels.getHeight()).max().orElse(0));
 
         //See Reforging Station recipes when right-clicking the Reforging Station block in JEI
         registry.addRecipeCatalyst(new ItemStack(BlockReforgingStation.INSTANCE), QTRecipeCategory.UID);

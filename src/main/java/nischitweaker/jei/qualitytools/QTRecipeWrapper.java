@@ -8,6 +8,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import nischitweaker.config.ConfigHandler;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class QTRecipeWrapper implements IRecipeWrapper {
     public QTRecipeWrapper(ItemStack gear, List<ItemStack> materials, QualityType qualityType){
         this.gear.add(gear);
         this.materials = materials;
-        this.qualityLabels = QTQualityLabels.get(qualityType);
+        this.qualityLabels = ConfigHandler.qualitytools.jeiShowQualities ? QTQualityLabels.get(qualityType) : null;
     }
 
     public void addMaterial(CustomMaterial newMaterial) {
@@ -65,12 +66,12 @@ public class QTRecipeWrapper implements IRecipeWrapper {
 
     @Override
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        qualityLabels.draw(minecraft, QTRecipeCategory.LABELS_TOP);
+        if (qualityLabels != null) qualityLabels.draw(minecraft, QTRecipeCategory.LABELS_TOP);
     }
 
     @Override
     @Nonnull
     public List<String> getTooltipStrings(int mouseX, int mouseY) {
-        return qualityLabels.getTooltip(QTRecipeCategory.LABELS_TOP, mouseX, mouseY);
+        return qualityLabels != null ? qualityLabels.getTooltip(QTRecipeCategory.LABELS_TOP, mouseX, mouseY) : Collections.emptyList();
     }
 }
