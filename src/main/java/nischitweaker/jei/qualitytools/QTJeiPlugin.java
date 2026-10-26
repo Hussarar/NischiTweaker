@@ -1,9 +1,9 @@
 package nischitweaker.jei.qualitytools;
 
 import com.google.gson.*;
-import com.tmtravlr.qualitytools.QualityToolsHelper;
 import com.tmtravlr.qualitytools.config.ConfigLoader;
 import com.tmtravlr.qualitytools.config.CustomMaterial;
+import com.tmtravlr.qualitytools.config.QualityType;
 import com.tmtravlr.qualitytools.reforging.BlockReforgingStation;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IModPlugin;
@@ -12,13 +12,16 @@ import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.*;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.oredict.OreDictionary;
+import nischitweaker.CompatUtil;
+import nischitweaker.Tags;
 
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +31,8 @@ public class QTJeiPlugin implements IModPlugin {
 
     private static CustomMaterial universalMaterial = null;
     private static final Map<Item, List<ItemStack>> customMaterials = new HashMap<>();
+    private static final Map<Class<?>, Class<?>> repairableDeclarers = new HashMap<>();
+    private static List<ItemStack> allMaterialStacks = null;
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
@@ -44,59 +49,30 @@ public class QTJeiPlugin implements IModPlugin {
     }
 
     private List<QTRecipeWrapper> getRecipes(IJeiHelpers helpers) {
+        long startTime = System.currentTimeMillis();
+
         //Load configs early
         ConfigLoader.reloadConfigs();
+        universalMaterial = null;
         loadCustomReforgingMaterialsEarly();
 
         List<QTRecipeWrapper> recipeList = new ArrayList<>();
         for (Item gearItem : ForgeRegistries.ITEMS) {
             ItemStack gearStack = new ItemStack(gearItem); //this approach does not allow metadata on the gear stacks, but that doesn't make sense anyway
 
-            //Is not hidden in JEI
-            if(gearStack.isEmpty() || helpers.getIngredientBlacklist().isIngredientBlacklisted(gearStack)) continue;
             //Is able to get quality
-            if (!QualityToolsHelper.generateQualityTag(gearStack, true)) continue;
+            if (gearStack.isEmpty() || !canGetQuality(gearStack)) continue;
+            //Is not hidden in JEI, more expensive so checked after the quality check
+            if (helpers.getIngredientBlacklist().isIngredientBlacklisted(gearStack)) continue;
 
-            List<ItemStack> materials = new ArrayList<>();
-
-            //For performance, we assume that all normal gear items don't have their own getIsRepairable overrides but use the default material.getRepairItemStack methods
-            ItemStack orePlaceholder = null;
-            if(gearItem instanceof ItemSword)
-                orePlaceholder = Item.ToolMaterial.valueOf(((ItemSword) gearItem).getToolMaterialName()).getRepairItemStack();
-            else if(gearItem instanceof ItemTool)
-                orePlaceholder = Item.ToolMaterial.valueOf(((ItemTool) gearItem).getToolMaterialName()).getRepairItemStack();
-            else if(gearItem instanceof ItemHoe)
-                orePlaceholder = Item.ToolMaterial.valueOf(((ItemHoe) gearItem).getMaterialName()).getRepairItemStack();
-            else if(gearItem instanceof ItemArmor)
-                orePlaceholder = ((ItemArmor) gearItem).getArmorMaterial().getRepairItemStack();
-
-            if(orePlaceholder != null && !orePlaceholder.isEmpty()) {
-                int[] oreIds = OreDictionary.getOreIDs(orePlaceholder);
-                if(oreIds.length > 0)
-                    for (int oreIndex : oreIds)
-                        materials.addAll(OreDictionary.getOres(OreDictionary.getOreName(oreIndex)));
-                else
-                    materials.add(orePlaceholder);
-            }
-            else {
-                //Go through all registered items and check if they can reforge the gear item, quite a cursed approach
-                for (Item materialItem : ForgeRegistries.ITEMS) {
-                    ItemStack materialStack = new ItemStack(materialItem);
-                    if (ConfigLoader.useRepairItem && gearItem.getIsRepairable(gearStack, materialStack))
-                        materials.add(materialStack);
-                }
-            }
+            List<ItemStack> materials = new ArrayList<>(getRepairMaterials(gearItem, gearStack));
 
             //Add custom config entries
-            if(customMaterials.containsKey(gearItem))
+            if (customMaterials.containsKey(gearItem))
                 materials.addAll(customMaterials.get(gearItem));
 
-            if (!materials.isEmpty()) {
-                //Remove generated Quality from display stack
-                if (gearStack.hasTagCompound() && gearStack.getTagCompound().hasKey("Quality"))
-                    gearStack.getTagCompound().removeTag("Quality");
+            if (!materials.isEmpty())
                 recipeList.add(new QTRecipeWrapper(gearStack, materials));
-            }
         }
 
         if (universalMaterial != null)
@@ -105,8 +81,76 @@ public class QTJeiPlugin implements IModPlugin {
         //Clear caches, no need for them after startup
         QTRecipeWrapper.clearCache();
         customMaterials.clear();
+        repairableDeclarers.clear();
+        allMaterialStacks = null;
 
+        Tags.LOGGER.info("Created {} Quality Tools reforging recipes for JEI in {}ms", recipeList.size(), System.currentTimeMillis() - startTime);
         return recipeList;
+    }
+
+    //Same as QualityToolsHelper.generateQualityTag without actually rolling a quality and writing it to the stack
+    private static boolean canGetQuality(ItemStack stack) {
+        if (stack.getItem().getItemStackLimit(stack) != 1 && !ConfigLoader.allowStackableItems) return false;
+        for (QualityType qualityType : ConfigLoader.qualityTypes.values())
+            if (qualityType != null && qualityType.itemMatches(stack))
+                return true;
+        return false;
+    }
+
+    //Mirrors the getIsRepairable part of QualityToolsHelper.canReforgeWith
+    private static List<ItemStack> getRepairMaterials(Item gearItem, ItemStack gearStack) {
+        if (!ConfigLoader.useRepairItem) return Collections.emptyList();
+
+        //getIsRepairable only returns a single answer per tool+material pair, so ideally we would need to test every registered item
+        //Instead check which class implements getIsRepairable. For the vanilla implementations we know the result without testing
+        Class<?> declarer = repairableDeclarers.computeIfAbsent(gearItem.getClass(), QTJeiPlugin::getRepairableDeclarer);
+        boolean isVanillaBody = declarer == Item.class || declarer == ItemSword.class || declarer == ItemTool.class || declarer == ItemArmor.class;
+
+        //MaterialTweaker injects into these vanilla bodies, so we need to ask it directly
+        //ItemShield and ItemElytra (also injected) and all other implementations are handled by testing every item
+        if (isVanillaBody && Loader.isModLoaded("materialtweaker")) {
+            ItemStack overrideStack = MaterialTweakerCompat.getOverrideRepairStack(gearItem);
+            if (overrideStack != null) return Collections.singletonList(overrideStack);
+        }
+
+        //Item.getIsRepairable always returns false
+        if (declarer == Item.class) return Collections.emptyList();
+
+        //ItemSword, ItemTool and ItemArmor only accept their material's repair item (wildcard meta gets expanded by JEI)
+        try {
+            ItemStack repairStack = null;
+            if (declarer == ItemSword.class)
+                repairStack = Item.ToolMaterial.valueOf(((ItemSword) gearItem).getToolMaterialName()).getRepairItemStack();
+            else if (declarer == ItemTool.class)
+                repairStack = Item.ToolMaterial.valueOf(((ItemTool) gearItem).getToolMaterialName()).getRepairItemStack();
+            else if (declarer == ItemArmor.class)
+                repairStack = ((ItemArmor) gearItem).getArmorMaterial().getRepairItemStack();
+            if (repairStack != null)
+                return repairStack.isEmpty() ? Collections.emptyList() : Collections.singletonList(repairStack);
+        } catch (IllegalArgumentException ignored) {} //Material name not found in ToolMaterial enum, fall back to testing every item
+
+        //Custom implementation, go through all registered items and check if they can reforge the gear item
+        if (allMaterialStacks == null) {
+            allMaterialStacks = new ArrayList<>();
+            for (Item materialItem : ForgeRegistries.ITEMS) {
+                ItemStack materialStack = new ItemStack(materialItem);
+                if (!materialStack.isEmpty()) allMaterialStacks.add(materialStack);
+            }
+        }
+        List<ItemStack> materials = new ArrayList<>();
+        for (ItemStack materialStack : allMaterialStacks)
+            if (gearItem.getIsRepairable(gearStack, materialStack))
+                materials.add(materialStack);
+        return materials;
+    }
+
+    //Returns the class that implements getIsRepairable for the given item class, or null if it can't be found
+    private static Class<?> getRepairableDeclarer(Class<?> itemClass) {
+        try {
+            return itemClass.getMethod(CompatUtil.isDev() ? "getIsRepairable" : "func_82789_a", ItemStack.class, ItemStack.class).getDeclaringClass();
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
     }
 
     private static void loadCustomReforgingMaterialsEarly() {
