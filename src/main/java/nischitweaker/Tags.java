@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Tags {
     public static final String MODID = "nischitweaker";
-    public static final String VERSION = "1.1.3";
+    public static final String VERSION = "1.1.3.1";
     public static final String CFG_VERSION = "1.1";
     public static final String NAME = "Nischi Tweaker";
     public static final Logger LOGGER = LogManager.getLogger(NAME);
