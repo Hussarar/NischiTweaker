@@ -47,7 +47,8 @@ public class NischiTweakerPlugin implements IFMLLoadingPlugin {
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.reskillable.goldenosmosis.json", true, ConfigHandler.reskillable.goldenOsmosisRepairableItems, "reskillable");
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.variedcommodities.musketloadtime.json", true, () -> ConfigHandler.variedcommodities.musketLoadingTime != 60, "variedcommodities");
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.xptome.greatertome.json", true, ConfigHandler.xptome.additionalTomes.keySet(), "xpbook");
-		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.locks.dragonbonelockpick.json", true, ConfigHandler.locks.lockPickStrengths.keySet(), "locks");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.locks.lockpickstrengths.json", true, ConfigHandler.locks.lockPickStrengths.keySet(), "locks");
+		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.locks.lockstats.json", true, ConfigHandler.locks.lockStats.keySet(), "locks");
 
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.locks.devgetitems.early.json", false, CompatUtil::isDev, "locks");
 		CompatUtil.conditionallyAddMixin("mixin.nischitweaker.grapplinghook.devcaptureposition.json", true, CompatUtil::isDev, "grapplemod");

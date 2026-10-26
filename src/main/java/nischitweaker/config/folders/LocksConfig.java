@@ -40,21 +40,29 @@ public class LocksConfig {
     );
 
     @Config.Comment({
-            "Add more locks with custom stats.",
+            "Add more locks with custom stats or change existing lock stats. Existing locks not listed here keep their default stats.",
             "Each entry is the name of the lock with its pins, enchantability and blast resistance.",
             "Add the name to the Generated Locks lists in locks.cfg if the lock should generate on chests.",
-            "Disable mixin by clearing the list."
+            "Disable mixin by clearing the list",
+            "By default adds a dragonbone lock with 12 pins.",
+            "For more locks you'll have to add a lang key, item model jsons (closed + open), item textures (closed + open) and a recipe json."
     })
-    @Config.Name("Additional Locks (MixinToggle)")
+    @Config.Name("Lock Stats (MixinToggle)")
     @Config.RequiresMcRestart
-    public Map<String, LockData> additionalLocks = new LinkedHashMap<>(ImmutableMap.of(
-            "dragonbone_lock", new LockData(12, 25, 80.0F)
-    ));
+    public Map<String, LockData> lockStats = new LinkedHashMap<>(ImmutableMap.<String,LockData>builder()
+            .put("wood_lock", new LockData(5, 15, 4.0F))
+            .put("gold_lock", new LockData(6, 22, 6.0F))
+            .put("iron_lock", new LockData(7, 14, 12.0F))
+            .put("steel_lock", new LockData(9, 12, 20.0F))
+            .put("diamond_lock", new LockData(11, 10, 100.0F))
+            .put("dragonbone_lock", new LockData(12, 22, 80.0F)).build()
+    );
 
     public static class LockData {
         @Config.Comment("Number of pins of the lock.")
         @Config.Name("Pins")
         @Config.RangeInt(min = 1, max = 15)
+        @Config.SlidingOption
         @Order(0)
         public int pins = 8;
 
