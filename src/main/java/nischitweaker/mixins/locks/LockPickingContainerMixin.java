@@ -11,6 +11,6 @@ public abstract class LockPickingContainerMixin {
 
     @ModifyConstant(method = "checkPin", constant = @Constant(floatValue = 1.25F), remap = false)
     private float nischitweaker_modifyCloseToFailPitchMulti(float original) {
-        return (float) ConfigHandler.locks.lockPickingPitchMultiplier;
+        return ConfigHandler.locks.lockPickingPitchMultiplier;
     }
 }

@@ -2,10 +2,10 @@ package nischitweaker.config.folders;
 
 import com.google.common.collect.ImmutableMap;
 import fermiumbooter.annotations.MixinConfig;
+import meldexun.betterconfig.api.Order;
 import net.minecraftforge.common.config.Config;
 import nischitweaker.Tags;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,15 +21,66 @@ public class LocksConfig {
     public float lockPickingPitchMultiplier = 0.5F;
 
     @Config.Comment({
-            "Add more lockpicks with strengths",
+            "Add more lockpicks with strengths or change existing lockpick strengths. Existing lockpicks not listed here keep their default strength.",
             "Strength being the chance to not break, as long as no enchantments are involved",
+            "It also limits the lock complexity a pick can open: Complexity I needs more than 0.25, II more than 0.5, III more than 0.75",
             "Disable mixin by clearing the list",
             "By default adds a dragonbone lockpick with 97% survival chance.",
             "For more picks you'll have to add a lang key, an item model json, a gui texture, an item texture and a recipe json."
     })
-    @Config.Name("Additional Lock Picks(MixinToggle)")
+    @Config.Name("Lock Pick Strengths (MixinToggle)")
     @Config.RequiresMcRestart
-    public Map<String, Float> additionalLockpicks = new LinkedHashMap<>(ImmutableMap.of(
-            "dragonbone_lock_pick", 0.97F
-    ));
+    public Map<String, Float> lockPickStrengths = new LinkedHashMap<>(ImmutableMap.<String,Float>builder()
+            .put("wood_lock_pick", 0.2F)
+            .put("iron_lock_pick", 0.35F)
+            .put("steel_lock_pick", 0.7F)
+            .put("gold_lock_pick", 0.25F)
+            .put("diamond_lock_pick", 0.85F)
+            .put("dragonbone_lock_pick", 0.97F).build()
+    );
+
+    @Config.Comment({
+            "Add more locks with custom stats or change existing lock stats. Existing locks not listed here keep their default stats.",
+            "Each entry is the name of the lock with its pins, enchantability and blast resistance.",
+            "Add the name to the Generated Locks lists in locks.cfg if the lock should generate on chests.",
+            "Disable mixin by clearing the list",
+            "By default adds a dragonbone lock with 12 pins.",
+            "For more locks you'll have to add a lang key, item model jsons (closed + open), item textures (closed + open) and a recipe json."
+    })
+    @Config.Name("Lock Stats (MixinToggle)")
+    @Config.RequiresMcRestart
+    public Map<String, LockData> lockStats = new LinkedHashMap<>(ImmutableMap.<String,LockData>builder()
+            .put("wood_lock", new LockData(5, 15, 4.0F))
+            .put("gold_lock", new LockData(6, 22, 6.0F))
+            .put("iron_lock", new LockData(7, 14, 12.0F))
+            .put("steel_lock", new LockData(9, 12, 20.0F))
+            .put("diamond_lock", new LockData(11, 10, 100.0F))
+            .put("dragonbone_lock", new LockData(12, 22, 80.0F)).build()
+    );
+
+    public static class LockData {
+        @Config.Comment("Number of pins of the lock.")
+        @Config.Name("Pins")
+        @Config.RangeInt(min = 1, max = 15)
+        @Config.SlidingOption
+        @Order(0)
+        public int pins = 8;
+
+        @Config.Comment("Enchantability of the lock, higher means better enchantments when enchanting it")
+        @Config.Name("Enchantability")
+        @Order(1)
+        public int enchantability = 10;
+
+        @Config.Comment("Blast resistance of a block while it is locked with this lock. The higher of this and the block's own resistance is used.")
+        @Config.Name("Blast Resistance")
+        @Order(2)
+        public float resistance = 10.0F;
+
+        public LockData() {} // needed for betterconfig
+        public LockData(int pins, int enchantability, float resistance) {
+            this.pins = pins;
+            this.enchantability = enchantability;
+            this.resistance = resistance;
+        }
+    }
 }
