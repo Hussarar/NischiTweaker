@@ -3,12 +3,15 @@ package nischitweaker.config;
 import meldexun.betterconfig.api.BetterConfig;
 import meldexun.betterconfig.api.BetterConfigManager;
 import meldexun.betterconfig.api.LoadEarly;
+import meldexun.betterconfig.api.tree.IConfigCategory;
+import meldexun.betterconfig.api.tree.IConfigContext;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import nischitweaker.Tags;
 import nischitweaker.config.folders.*;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
 
 @BetterConfig(
 		modid = Tags.MODID,
@@ -127,6 +130,12 @@ public class ConfigHandler {
 
 	@Config.Name("Minecraft")
 	public static VanillaConfig vanilla = new VanillaConfig();
+
+	@SuppressWarnings("unused")
+	@BetterConfig.AfterRead
+	public static <T extends IConfigContext<T>> void migrateConfigs(IConfigCategory<T> category, T context, ArtifactVersion version){
+		ConfigMigrator.handleMigration(category, context, version);
+	}
 
     @Mod.EventBusSubscriber
 	private static class EventHandler{
