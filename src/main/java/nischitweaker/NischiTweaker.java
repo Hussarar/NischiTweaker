@@ -12,7 +12,7 @@ import nischitweaker.features.GreaterXPTome;
         name = Tags.NAME,
         dependencies =
                 "required-after:fermiumbooter@[1.5.3,);" +
-                "required:betterconfig@[1.2.0,)",
+                "required:betterconfig@[1.3.0,)",
         acceptableRemoteVersions = "*"
 )
 public class NischiTweaker {
